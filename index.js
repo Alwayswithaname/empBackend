@@ -387,3 +387,23 @@ function updateEployeeQuestions(rolesData, rolesName, employeesData, employeesNa
     })
 }
 
+function getNewRoleId(employeeId, rolesData, rolesName) {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'role',
+            message: `What is the employees new role?`,
+            choices: rolesName,
+            pageSize: 12
+        }
+    ]).then(answers => {
+        let roleId;
+        for (let i =0; i < rolesData.length; i++){
+            if(answers.role === rolesData[i].role) {
+                roleId = rolesData[i].id;
+            }
+        }
+        updateEployeeRole(employeeId, roleId)
+    })
+}
+
