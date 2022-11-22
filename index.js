@@ -508,3 +508,11 @@ function deleteEmployeeQuestions(employeesData, employeesNames) {
     })
 } 
 
+function deleteEmployeeFromDb(employeeId, name){
+    connection.query(`DELETE FROM employees WHERE ?`, {id: employeeId}, (err, res) => {
+        if (err) throw err; 
+        console.log(`${name} was deleted fomr the database.`)
+        init();
+    })
+}
+
