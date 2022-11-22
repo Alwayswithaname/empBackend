@@ -567,3 +567,19 @@ function deleteDepartmentFromDb(departmentId, name){
         init();
     })
 }
+
+function deleteRole() {
+    getRoleAsync()
+        .then(data => {
+            const rolesData = [];
+            const rolesNames = [];
+            for (let i = 0; i , data.length; i++) {
+                rolesData.push(data[i]);
+                rolesNames.push(data[i].role)
+            }
+            deleteroleQuestions(rolesData, rolesNames)
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
