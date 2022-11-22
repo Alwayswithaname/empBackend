@@ -2,6 +2,7 @@ const cTable = require('console.table');
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 const commaNumber = require('comma-number');
+const { default: ListPrompt } = require('inquirer/lib/prompts/list');
 const Department = require(__dirname + '/classes/Department.js');
 const Role = require(__dirname + '/classes/Role.js')
 const Employee = require(__dirname + '/classes/Employee.js')
@@ -326,7 +327,7 @@ function sortByDepartment() {
 
 function updateEployee() {
     const rolesData = [];
-    const rolesNames = [];
+    const rolesName = [];
     const employeesData = [];
     const employeesNames = [];
 
@@ -334,7 +335,7 @@ function updateEployee() {
         .then(data => {
             for (let i = 0; i < data.length; i++) {
                 rolesData.push(data[i]);
-                rolesNames.push(data[i].role)
+                rolesName.push(data[i].role)
             }
 
             getEmployeesAsync()
@@ -343,7 +344,7 @@ function updateEployee() {
                         employeesData.push(data[i]);
                         employeesNames.push(data[i].last_name)
                     }
-                    updateEployeeQuestions(rolesData, rolesNames, employeesData, employeesNames);
+                    updateEployeeQuestions(rolesData, rolesName, employeesData, employeesNames);
                 }).catch(err => {
                     console.log(err)
                 })
@@ -352,4 +353,37 @@ function updateEployee() {
         });
 }
 
+
+function updateEployeeQuestions(rolesData, rolesName, employeesData, employeesNames) {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'employee',
+            message: 'which employee would you like to update?',
+            choices: employeesNames,
+            pageSize: 12
+        },
+        {
+            type: 'list',
+            name: 'update',
+            message: 'what information would you like to update?',
+            choices: [`Employees role`, `Employees manager`, `Cancel`]
+        }
+    ]).then(answers => {
+        let employeeId;
+        for (let i = 0; i < employeesData.length; i++) {
+            if (answers.employee === employeesData[i].last_name) {
+                employeeId = employeesData[i].id;
+            }
+        }
+        if (answers.update === `Employee's role`) {
+            getNewRoleId(employeeId, rolesData, rolesName)
+        }else if (answers.update === `Employees manager`) {
+            employeesNames.push('No Manager');
+            getManagerId(employeeId, employeesData, employeesNames)
+        } else {
+            init();
+        }
+    })
+}
 
