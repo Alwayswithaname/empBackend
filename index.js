@@ -267,3 +267,25 @@ function viewRoles() {
                     init();
                 });
 }
+
+function viewEmployees() {
+    inquirer.prompt([
+        {
+            name: 'sortby',
+            type: 'list',
+            message: 'How would you like to sort the employees?',
+            choices: ['Last name', 'Manager', 'Department']
+        }
+    ]).then((answers) => {
+        switch (answers.sortBy) {
+            case 'Last name': sortByLastName();
+            break;
+
+            case 'Manager': sortByManager();
+            break;
+
+            case 'Department': sortByDepartment();
+            break;
+        }
+    })
+}
