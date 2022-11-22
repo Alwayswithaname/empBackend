@@ -620,3 +620,38 @@ function deleteRole() {
             init();
         })
     }
+
+    function viewDepartmentBudget() {
+        const departmentData = [];
+        const departmentNames = [];
+        getDepartmentsAsync()
+            .then(data => {
+                for (let i = 0; i < data.length; i++) {
+                    departmentData.push(data[i]);
+                    departmentNames.push(data[i].name);
+                }
+                viewBudgetQeustions(departmentData, departmentNames);
+             }).catch(err => {
+                console.log(err);
+            });
+    }
+    
+    function viewBudgetQeustions(departmentData, departmentNames) {
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'name',
+                message: `Which departmen budget would you like to see?`,
+                choices: departmentNames 
+            }
+        ]).then(answers => {
+            let departmentId;
+            for (let i = 0; i < departmentData.length; i++) {
+                if (answers.name === departmentData[i].name) {
+                departmentId = departmentData[i].id;
+                }
+            }
+            getDepartmentBudget(departmentId, answers.name);
+        });
+}
+    
