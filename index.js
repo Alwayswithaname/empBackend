@@ -407,7 +407,7 @@ function getNewRoleId(employeeId, rolesData, rolesName) {
     })
 }
 
-function upodateEmployeeRole(employeeId, roleId) {
+function updateEployeeRole(employeeId, roleId) {
     connection.query(`UPDATE employees SET ? WHERE ?`, [
         {
             role_id: roleId
@@ -423,4 +423,26 @@ function upodateEmployeeRole(employeeId, roleId) {
         })
 }
 
+function getManagerId(employeeId, employeesData, employeesNames) {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'manager',
+            message: `who is the employees new manager?`,
+            choices: employeesNames,
+            pageSize: 12
+        }
+    ]).then(answers => {
+        let managerId;
+        for (let i = 0; i < employeesData,length; i++) {
+            if (answers.manager === employeesData[i].last_name) {
+                managerId = employeesData[i].id;
+            }
+        }
+        if (answers.manager === 'No Manager') {
+            managerId = null;
+        }
+        updateEployeeManager(employeeId, managerId)
+    })
+}
 
