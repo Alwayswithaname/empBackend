@@ -654,4 +654,25 @@ function deleteRole() {
             getDepartmentBudget(departmentId, answers.name);
         });
 }
+    function getDepartmentBudget(departmentId, name) {
+        connection.query(`SELECT r.salary FROM employees e JOIN roles r ON e.role_id = r.id JOIN departments d ON r.department_id = d.id WHERE ?`, 
+                            {'d.id': departmentId},
+                            (err, data) => {
+                                if (err) throw err;
+                                calculateDepartmentBudget(data, name);
+                            });
+    }
+
+    function calculateDepartmentBudget (data, name) {
+        let departmenBudget = 0;
+        for (let i = 0; i < data.length; i++) {
+            departmenBudget += data[i].salary;
+        }
+        departmenBudget = departmenBudget.toFixed(2);
+        departmenBudget = commaNumber(departmenBudget);
+        console.log(`\nThe budget for ${name} id ${departmenBudget}`)
+        init();
+    }
+
+
     
