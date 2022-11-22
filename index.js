@@ -256,3 +256,14 @@ function insertEmployee(firstName, lastName, roleId, managerId) {
         init();
     });
 }
+
+function viewRoles() {
+    connection.query(`SELECT r.title AS 'Role', r.id AS 'ID', d.name AS 'Department', r.salary AS 'salary'
+                        FROM roles r JOIN departments d ON r.deparment_id = d.id ORDER BY r.department_id`,
+                
+                (err, res) => {
+                    console.log('\n\n')
+                    console.table(res);
+                    init();
+                });
+}
