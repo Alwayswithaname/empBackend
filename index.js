@@ -516,3 +516,18 @@ function deleteEmployeeFromDb(employeeId, name){
     })
 }
 
+function deleteDepartment() {
+    const departmentData = [];
+    const departmentNames = [];
+    getDepartmentsAsync()
+        .then(data => {
+            for (let i = 0; i < data.length; i++) {
+                departmentData.push(data[i]);
+                departmentNames.push(data[i].name);
+            }
+            deleteDepartmentQuestions(departmentData, departmentNames);
+        }).catch(err => {
+            console.log(err);
+        }) 
+}
+
