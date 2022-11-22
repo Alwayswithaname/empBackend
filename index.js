@@ -249,4 +249,10 @@ function addEmployee() {
     });
 }
 
-function
+function insertEmployee(firstName, lastName, roleId, managerId) {
+    connection.query('INSERT INTO employees SET ?', new Employee(firstName, lastName, roleId, managerId), (err, res) => {
+        if (err) throw err;
+        console.log(`${firstName} ${lastName} hass been added`)
+        init();
+    });
+}
