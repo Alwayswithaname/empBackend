@@ -153,5 +153,13 @@ function addRole() {
         insertRole(answers.title, answers.salary, departmentId);
     })
 }
-            
+
+
+function insertRole(title, salary, department_id) {
+    connection.query('INSERT INTO roles SET ?', new Role(title, salary, department_id), (err, res) => {
+        if (err) throw err;
+        console.log(`${title} to Roles was added`);
+        init();
+    });
+}
   
