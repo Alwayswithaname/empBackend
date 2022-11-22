@@ -101,3 +101,57 @@ function insertDepartment(newDepart) {
 }
 
 
+function addRole() {
+    const array = [];
+    getDepartmentsAsync()
+        .then(data => {
+            for (let i = 0; i < data.length; i++) {
+                array.push(data[i])
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'title',
+            message: 'what is the title of the new role?',
+            default: () => { },
+            validate: title => {
+                let valid = /^[a-zA-Z0-9 ]{1,30$}/.test(title);
+                if (!valid) {
+                    return console.log('your title must be between 1 and 30 characters.')
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'what is the salary of the new role?',
+            default: () => { },
+            validate: salary => {
+                let valid = /^\d+(\.\d{0,2})?$/.test(salary);
+                if (!valid) {
+                    return console.log('please enter a valid number.')
+                }} 
+        },
+        {
+        type: 'input',
+            name: 'department',
+            message: 'what department is the new role in?',
+            choices: array 
+        }
+    ]).then(answers => {
+        let departmentId;
+            for (let i = 0; i < array.length; i++) {
+                if (answers.department === array[i].name) {
+                    departmentId = array[i].id
+                }
+        }
+        insertRole(answers.title, answers.salary, departmentId);
+    })
+}
+            
+  
