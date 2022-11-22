@@ -583,3 +583,34 @@ function deleteRole() {
             console.log(err);
         })
     }
+    function deleteroleQuestions(rolesData, rolesNames) {
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'name',
+                message: `what role would you like to delete?`,
+                choices: rolesNames,
+                pageSize: 12
+            },
+            {
+                type: 'confirm',
+                name: 'confirm',
+                message: `is this right?`
+    
+            }
+        ]).then(answers => {
+            if (answers.confirm) {
+                let roleId;
+                for (let i = 0; i < rolesData.length; i++) {
+                    if (answers.name === rolesData[i].role) {
+                        roleId = rolesData[i].id;
+                    }
+                }
+                deleteRoleFromDb(rolesData, answers.name);
+            } else {
+                init();
+            }
+        })
+    } 
+
+    
