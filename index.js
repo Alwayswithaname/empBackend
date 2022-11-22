@@ -407,3 +407,20 @@ function getNewRoleId(employeeId, rolesData, rolesName) {
     })
 }
 
+function upodateEmployeeRole(employeeId, roleId) {
+    connection.query(`UPDATE employees SET ? WHERE ?`, [
+        {
+            role_id: roleId
+        },
+        {
+            id: employeeId
+        }
+    ],
+        (err, res) => {
+            if (err) throw err;
+            console.log(`Employees role has been changed`);
+            init();
+        })
+}
+
+
