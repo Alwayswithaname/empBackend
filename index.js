@@ -71,4 +71,23 @@ function init() {
         })
 }
 
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'what is the name of the new department?',
+            default: () => { },
+            validate: name => {
+                let valid = /^[a-zA-Z0-9 ]{1,30$}/.test(name);
+                if (!valid) {
+                    return console.log('your name must be between 1 and 30 characters.')
+                }
+            }
+        }
+
+    ]).then ((answers) => {
+        insertDepartment(answers.name);
+    });
+}
 
