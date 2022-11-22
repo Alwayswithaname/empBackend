@@ -442,11 +442,11 @@ function getManagerId(employeeId, employeesData, employeesNames) {
         if (answers.manager === 'No Manager') {
             managerId = null;
         }
-        updateEployeeManager(employeeId, managerId)
+        updateEmployeeManager(employeeId, managerId)
     })
 }
 
-function updateEployeeManager(employeeId, managerId) {
+function updateEmployeeManager(employeeId, managerId) {
     connection.query(`UPDATE employees SET ? WHERE ?` [
         {
             manager_id: managerId
@@ -459,6 +459,22 @@ function updateEployeeManager(employeeId, managerId) {
             if (err) throw err;
             console.log(`Employees manager has been changed`)
             init();
+        })
+}
+
+function deleteEmployee() {
+    getEmployeesAsync()
+        .then(data => {
+            const employeesData = [];
+            const employeesNames = [];
+            for (let i = 0; i , data.length; i++) {
+                employeesData.push(data[i]);
+                employeesNames.push(data[i].last_name)
+            }
+            deleteEmployeeQuestions(employeesData, employeesNames)
+        })
+        .catch(err => {
+            console.log(err);
         })
 }
 
