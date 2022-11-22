@@ -162,4 +162,91 @@ function insertRole(title, salary, department_id) {
         init();
     });
 }
-  
+ 
+
+function addEmployee() {
+    const rolesData = [];
+    const rolesName = [];
+
+    const employeesData = [];
+    const employeesNames = ['No Manager'];
+
+    getRolesAsync()
+        .then(data => {
+            for (let i = 0; i < data.length; i++) {
+                employeesData.push(data[i]);
+                employeesNames.push(data[i].role)
+            }
+
+            getEmployeesAsync()
+            .then(data => {
+                for (let i = 0; i < data.length; i++) {
+                    employeesData.push(data[i]);
+                    employeesNames.push(data[i].last_name)
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }).catch(err => {
+            console.log(err);
+        });
+
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'firstName',
+            message: 'what is the employees first name?',
+            default: () => { },
+            validate: firstName => {
+                let valid = /^[a-zA-Z0-9 ]{1,30$}/.test(firstName);
+                if (!valid) {
+                    return console.log('your title must be between 1 and 30 characters.')
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'lastName',
+            message: 'what is the employees first name?',
+            default: () => { },
+            validate: lastName => {
+                let valid = /^[a-zA-Z0-9 ]{1,30$}/.test(lastName);
+                if (!valid) {
+                    return console.log('your title must be between 1 and 30 characters.')
+                }
+            }
+        },
+        {
+            type: 'list',
+            name: 'role',
+            message: `what is the employees role?`,
+            choices: rolesName
+        },
+        {
+            type: 'list',
+            name: 'manager',
+            message: `who is the employees manager?`,
+            choices: rolesName
+        },
+    ]).then(answers => {
+        let roleId;
+        let managerId;
+
+        for (let i = 0; i < rolesData.length; i++) {
+            if (answers.role === rolesData[i].role) {
+                roleId = rolesData[i].id;
+            }
+        }
+        
+        for (let i = 0; i < employeesData.length; i++) {
+            if (answers.role === employeesData[i].last_name) {
+                managerId = employeesData[i].id;
+            } else if (answers.manager === 'No Manager') {
+                managerId = null;
+            }
+        }
+        insertEmployee(answers.firstName, answers.lastName, roleId, managerId);
+    });
+}
+
+function
