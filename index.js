@@ -560,3 +560,10 @@ function deleteDepartmentQuestions(departmentData, departmentNames) {
     });
 }
 
+function deleteDepartmentFromDb(departmentId, name){
+    connection.query(`DELETE FROM department WHERE ?`, {id: departmentId}, (err, res) => {
+        if (err) throw err; 
+        console.log(`${name} was deleted fomr the database.`)
+        init();
+    })
+}
