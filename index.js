@@ -289,3 +289,14 @@ function viewEmployees() {
         }
     })
 }
+
+function sortByLastName() {
+    connection.query(`SELECT e.last_name AS 'First name', e.id AS 'ID', r.title AS 'Role', r.Salary', d.name AS 'Department'
+                    FROM employees e JOIN roles r ON e.role_id = r.id LEFT JOIN departments d ON r.department_id = d.id ORDER BY e.last_name`,
+                    (err, res) => {
+                        if (err) throw err;
+                        console.log('\n\n')
+                        console.table(res);
+                        init();
+                    });
+}
