@@ -577,13 +577,13 @@ function deleteRole() {
                 rolesData.push(data[i]);
                 rolesNames.push(data[i].role)
             }
-            deleteroleQuestions(rolesData, rolesNames)
+            deleteRoleQuestions(rolesData, rolesNames)
         })
         .catch(err => {
             console.log(err);
         })
     }
-    function deleteroleQuestions(rolesData, rolesNames) {
+    function deleteRoleQuestions(rolesData, rolesNames) {
         inquirer.prompt([
             {
                 type: 'list',
@@ -600,17 +600,23 @@ function deleteRole() {
             }
         ]).then(answers => {
             if (answers.confirm) {
-                let roleId;
+                let rolesId;
                 for (let i = 0; i < rolesData.length; i++) {
                     if (answers.name === rolesData[i].role) {
-                        roleId = rolesData[i].id;
+                        rolesId = rolesData[i].id;
                     }
                 }
-                deleteRoleFromDb(rolesData, answers.name);
+                deleteRoleFromDb(rolesId, answers.name);
             } else {
                 init();
             }
         })
     } 
 
-    
+    function deleteRoleFromDb(rolesId, name){
+        connection.query(`DELETE FROM department WHERE ?`, {id: rolesId}, (err, res) => {
+            if (err) throw err; 
+            console.log(`${name} was deleted fomr the database.`)
+            init();
+        })
+    }
