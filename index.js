@@ -478,3 +478,33 @@ function deleteEmployee() {
         })
 }
 
+function deleteEmployeeQuestions(employeesData, employeesNames) {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'name',
+            message: `Who would you like to delete?`,
+            choices: employeesNames,
+            pageSize: 12
+        },
+        {
+            type: 'confirm',
+            name: 'confirm',
+            message: `is this right?`
+
+        }
+    ]).then(answers => {
+        if (answers.confirm) {
+            let employeeId;
+            for (let i = 0; i < employeesData.length; i++) {
+                if (answers.name === employeesData[i].last_name) {
+                    employeeId = employeesData[i].id;
+                }
+            }
+            deleteEmployeeFromDb(employeeId, answers.name);
+        } else {
+            init();
+        }
+    })
+} 
+
