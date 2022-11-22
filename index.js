@@ -531,3 +531,32 @@ function deleteDepartment() {
         }) 
 }
 
+function deleteDepartmentQuestions(departmentData, departmentNames) {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'name',
+            message: `which department do you want to delete?`,
+            choices: departmentNames,
+            pageSize: 12
+        },
+        {
+            type: 'confirm',
+            name: 'confirm',
+            message: `is this right?` 
+        }
+    ]).then(answers => {
+        if (answers.confirm) {
+            let departmentId;
+            for (let i = 0; i < departmentData.length; i++) {
+                if (answers.name === departmentData[i].name){
+                    departmentId = departmentData[i].id;
+                }
+            }
+            deleteDepartmentFromDb(departmentId, answers.name);
+        }else {
+            init();
+        }
+    });
+}
+
