@@ -323,3 +323,33 @@ function sortByDepartment() {
                     });
 }
                         
+
+function updateEployee() {
+    const rolesData = [];
+    const rolesNames = [];
+    const employeesData = [];
+    const employeesNames = [];
+
+    getRolesAsync()
+        .then(data => {
+            for (let i = 0; i < data.length; i++) {
+                rolesData.push(data[i]);
+                rolesNames.push(data[i].role)
+            }
+
+            getEmployeesAsync()
+                .then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        employeesData.push(data[i]);
+                        employeesNames.push(data[i].last_name)
+                    }
+                    updateEployeeQuestions(rolesData, rolesNames, employeesData, employeesNames);
+                }).catch(err => {
+                    console.log(err)
+                })
+        }).catch(err => {
+            console.log(err);
+        });
+}
+
+
