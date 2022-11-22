@@ -90,4 +90,14 @@ function addDepartment() {
         insertDepartment(answers.name);
     });
 }
+ 
+ 
+function insertDepartment(newDepart) {
+    connection.query('INSERT INTO department SET ?', new Department(newDepart), (err, res) => {
+        if (err) throw err;
+        console.log(`${newDepart} has been added to Department`);
+        init();
+    })
+}
+
 
