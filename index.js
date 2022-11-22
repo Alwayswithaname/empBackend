@@ -446,3 +446,19 @@ function getManagerId(employeeId, employeesData, employeesNames) {
     })
 }
 
+function updateEployeeManager(employeeId, managerId) {
+    connection.query(`UPDATE employees SET ? WHERE ?` [
+        {
+            manager_id: managerId
+        },
+        {
+            id: employeeId
+        }
+    ],
+        (err, res) => {
+            if (err) throw err;
+            console.log(`Employees manager has been changed`)
+            init();
+        })
+}
+
