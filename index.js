@@ -11,7 +11,7 @@ const Employee = require(__dirname + '/classes/Employee.js')
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'FuckDevinup768',
+    password: '',
     database: 'company_db'
 });
 
