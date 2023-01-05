@@ -2,7 +2,7 @@ const cTable = require('console.table');
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 const commaNumber = require('comma-number');
-const { default: ListPrompt } = require('inquirer/lib/prompts/list');
+
 const Department = require(__dirname + '/classes/Department.js');
 const Role = require(__dirname + '/classes/Role.js')
 const Employee = require(__dirname + '/classes/Employee.js')
@@ -11,7 +11,7 @@ const Employee = require(__dirname + '/classes/Employee.js')
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: 'FuckDevinup768',
     database: 'company_db'
 });
 
@@ -20,7 +20,9 @@ console.log("*                                 *")
 console.log("*        EMPLOYEE TRACKER         *")
 console.log("*                                 *")
 console.log("***********************************")
-connection.connect();
+connection.connect(function (err) {
+    if (err) throw err;
+});
 init();
 
 function init() {
@@ -30,7 +32,7 @@ function init() {
             type: 'list',
             name: 'init',
             message: 'What do you want to do?',
-            choices: ['View Departments', 'View Roles', 'View Employees', 'View Department Budget', 'Update Employee', 'Add Department', 'Add Role', 'Add Employe', 'Delete Department', 'Delete Role', 'Delete Employee', 'Exit Employee Tracker'],
+            choices: ['View Departments', 'View Roles', 'View Employees', 'View Department Budget', 'Update Employee', 'Add Department', 'Add Role', 'Add Employee', 'Delete Department', 'Delete Role', 'Delete Employee', 'Exit Employee Tracker'],
             pageSize: 12
         }
         ]).then((answers) => {
@@ -57,6 +59,9 @@ function init() {
                 case 'view Roles': viewRoles();
                 break;
 
+                case 'view employees': viewEmployees();
+                break;
+
                 case 'view Department Budget': viewDepartmentBudget();
                 break;
 
@@ -80,8 +85,10 @@ function addDepartment() {
             message: 'what is the name of the new department?',
             default: () => { },
             validate: name => {
-                let valid = /^[a-zA-Z0-9 ]{1,30$}/.test(name);
-                if (!valid) {
+                let valid = /^[a-zA-Z0-9 ]{1,30}$/.test(name);
+                if (valid) {
+                    return true;
+                }else {
                     return console.log('your name must be between 1 and 30 characters.')
                 }
             }
@@ -121,8 +128,10 @@ function addRole() {
             message: 'what is the title of the new role?',
             default: () => { },
             validate: title => {
-                let valid = /^[a-zA-Z0-9 ]{1,30$}/.test(title);
-                if (!valid) {
+                let valid = /^[a-zA-Z0-9 ]{1,30}$/.test(title);
+                if (valid) {
+                    return true;
+                }else {
                     return console.log('your title must be between 1 and 30 characters.')
                 }
             }
@@ -134,7 +143,9 @@ function addRole() {
             default: () => { },
             validate: salary => {
                 let valid = /^\d+(\.\d{0,2})?$/.test(salary);
-                if (!valid) {
+                if (valid) {
+                    return true;
+                }else {
                     return console.log('please enter a valid number.')
                 }} 
         },
@@ -148,7 +159,7 @@ function addRole() {
         let departmentId;
             for (let i = 0; i < array.length; i++) {
                 if (answers.department === array[i].name) {
-                    departmentId = array[i].id
+                    departmentId = array[i].id;
                 }
         }
         insertRole(answers.title, answers.salary, departmentId);
@@ -167,7 +178,7 @@ function insertRole(title, salary, department_id) {
 
 function addEmployee() {
     const rolesData = [];
-    const rolesName = [];
+    const rolesNames = [];
 
     const employeesData = [];
     const employeesNames = ['No Manager'];
@@ -199,8 +210,10 @@ function addEmployee() {
             message: 'what is the employees first name?',
             default: () => { },
             validate: firstName => {
-                let valid = /^[a-zA-Z0-9 ]{1,30$}/.test(firstName);
-                if (!valid) {
+                let valid = /^[a-zA-Z0-9 ]{1,30}$/.test(firstName);
+                if (valid) {
+                    return true;
+                }else {
                     return console.log('your title must be between 1 and 30 characters.')
                 }
             }
@@ -208,11 +221,13 @@ function addEmployee() {
         {
             type: 'input',
             name: 'lastName',
-            message: 'what is the employees first name?',
+            message: 'what is the employees last name?',
             default: () => { },
             validate: lastName => {
-                let valid = /^[a-zA-Z0-9 ]{1,30$}/.test(lastName);
-                if (!valid) {
+                let valid = /^[a-zA-Z0-9 ]{1,30}$/.test(lastName);
+                if (valid) {
+                    return true;
+                }else {
                     return console.log('your title must be between 1 and 30 characters.')
                 }
             }
@@ -221,13 +236,13 @@ function addEmployee() {
             type: 'list',
             name: 'role',
             message: `what is the employees role?`,
-            choices: rolesName
+            choices: rolesNames
         },
         {
             type: 'list',
             name: 'manager',
             message: `who is the employees manager?`,
-            choices: rolesName
+            choices: employeesNames
         },
     ]).then(answers => {
         let roleId;
@@ -254,6 +269,15 @@ function insertEmployee(firstName, lastName, roleId, managerId) {
     connection.query('INSERT INTO employees SET ?', new Employee(firstName, lastName, roleId, managerId), (err, res) => {
         if (err) throw err;
         console.log(`${firstName} ${lastName} hass been added`)
+        init();
+    });
+}
+
+function viewDepartment() {
+    connection.query(`SELECT name AS 'Departments', id AS 'ID' FROM departments`, (err, res) => {
+        if (err) throw err;
+        console.log('\n\n')
+        console.table(res);
         init();
     });
 }
@@ -568,6 +592,8 @@ function deleteDepartmentFromDb(departmentId, name){
     })
 }
 
+
+
 function deleteRole() {
     getRoleAsync()
         .then(data => {
@@ -699,7 +725,7 @@ function deleteRole() {
 
 function getDepartmentsAsync() {
     return new Promise((resolve, reject) => {
-        connection.query(`SELECT * FROM departments`, (err, data) => {
+        connection.query(`SELECT * FROM department`, (err, data) => {
         if (err) { 
             return reject(err);
         }
@@ -707,3 +733,4 @@ function getDepartmentsAsync() {
     });
     });
 }
+

@@ -1,6 +1,6 @@
 class Role {
-    constructor(tittle, salary, department_id) {
-        this.tittle = tittle;
+    constructor(title, salary, department_id) {
+        this.title = title;
         this.salary = salary;
         this.department_id = department_id;
     }
